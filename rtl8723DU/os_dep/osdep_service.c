@@ -2207,6 +2207,7 @@ static int writeFile(struct file *fp, char *buf, int len)
 
 }
 
+MODULE_IMPORT_NS(VFS_internal_I_am_really_a_filesystem_and_am_NOT_a_driver);
 /*
 * Test if the specifi @param pathname is a direct and readable
 * If readable, @param sz is not used

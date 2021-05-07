@@ -70,7 +70,16 @@ static void rtw_dev_shutdown(struct device *dev)
 					else
 					#endif
 					{
+						rtw_set_drv_stopped(adapter);
+						rtw_stop_cmd_thread(adapter);
+						#ifdef CONFIG_CONCURRENT_MODE
+						rtw_drv_stop_vir_ifaces(dvobj);
+						#endif /* CONFIG_CONCURRENT_MODE */
 						#ifdef CONFIG_BT_COEXIST
+						#ifdef CONFIG_BT_COEXIST_SOCKET_TRX
+						if (GET_HAL_DATA(adapter)->EEPROMBluetoothCoexist)
+							rtw_btcoex_close_socket(adapter);
+						#endif
 						RTW_INFO("%s call halt notify\n", __FUNCTION__);
 						rtw_btcoex_HaltNotify(adapter);
 						#endif

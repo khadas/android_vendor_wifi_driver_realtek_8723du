@@ -232,6 +232,7 @@ struct coex_sta_8723d_1ant {
 	u32		high_priority_rx;
 	u32		low_priority_tx;
 	u32		low_priority_rx;
+	boolean		bt_ctr_ok;
 	boolean		is_hipri_rx_overhead;
 	s8		bt_rssi;
 	boolean		bt_tx_rx_mask;
@@ -242,6 +243,8 @@ struct coex_sta_8723d_1ant {
 	u32		bt_info_c2h_cnt[BT_INFO_SRC_8723D_1ANT_MAX];
 	boolean		bt_whck_test;
 	boolean		c2h_bt_inquiry_page;
+	boolean		bt_inq_page_pre;
+	boolean 	bt_inq_page_remain;
 	boolean		c2h_bt_remote_name_req;
 	boolean		c2h_bt_page;
 	boolean		wifi_is_high_pri_task;
@@ -310,6 +313,7 @@ struct coex_sta_8723d_1ant {
 
 	u8		bt_afh_map[10];
 	u8		bt_relink_downcount;
+	u8		bt_inq_page_downcount;
 	boolean		is_tdma_btautoslot;
 	boolean		is_tdma_btautoslot_hang;
 
@@ -345,6 +349,10 @@ struct coex_sta_8723d_1ant {
 	boolean		wl_ampdu_limit_en;
 	boolean		wl_rxagg_limit_en;
 	u8		wl_rxagg_size;
+	
+	u8	tdma_timer_base;
+	u8	wl_iot_peer;
+	
 };
 
 #define  BT_8723D_1ANT_ANTDET_PSD_POINTS			256

@@ -478,7 +478,7 @@ _InitWMACSetting(
 	HAL_DATA_TYPE *pHalData = GET_HAL_DATA(padapter);
 	u32 rcr;
 
-	rcr = RCR_APM | RCR_AM | RCR_AB | RCR_CBSSID_DATA | RCR_CBSSID_BCN | RCR_APP_ICV | RCR_AMF | RCR_HTC_LOC_CTRL | RCR_APP_MIC | RCR_APP_PHYST_RXFF;
+	rcr = RCR_APM | RCR_AM | RCR_AB | RCR_CBSSID_DATA | RCR_CBSSID_BCN | RCR_APP_ICV | RCR_AMF | RCR_HTC_LOC_CTRL | RCR_APP_MIC | RCR_APP_PHYST_RXFF | APP_FCS;
 	rtw_hal_set_hwreg(padapter, HW_VAR_RCR, (u8 *)&rcr);
 
 	/* Accept all data frames */
@@ -1685,6 +1685,7 @@ u32 rtl8723du_hal_deinit(PADAPTER padapter)
 
 unsigned int rtl8723du_inirp_init(PADAPTER padapter)
 {
+	struct registry_priv *regsty = adapter_to_regsty(padapter);
 	u8 i;
 	struct recv_buf *precvbuf;
 	uint status;
@@ -1708,7 +1709,7 @@ unsigned int rtl8723du_inirp_init(PADAPTER padapter)
 
 	/* issue Rx irp to receive data */
 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;
-	for (i = 0; i < NR_RECVBUFF; i++) {
+	for (i = 0; i < regsty->recvbuf_nr; i++) {
 		if (_read_port(pintfhdl, precvpriv->ff_hwaddr, 0, (unsigned char *)precvbuf) == _FALSE) {
 			status = _FAIL;
 			goto exit;
@@ -2279,6 +2280,9 @@ void rtl8723du_set_hal_ops(PADAPTER padapter)
 
 	pHalFunc->hal_xmit = &rtl8723du_hal_xmit;
 	pHalFunc->mgnt_xmit = &rtl8723du_mgnt_xmit;
+#ifdef CONFIG_RTW_MGMT_QUEUE
+	pHalFunc->hal_mgmt_xmitframe_enqueue = &rtl8723du_hal_mgmt_xmitframe_enqueue;
+#endif
 	pHalFunc->hal_xmitframe_enqueue = &rtl8723du_hal_xmitframe_enqueue;
 
 #ifdef CONFIG_HOSTAPD_MLME
